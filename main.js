@@ -1200,9 +1200,9 @@ async function connect() {
         } // endIf
 
         // Create transmisiontime state for every light
-        const objId = `${channelName}.transmision`;
+        const objId = `${channelName}.transision`;
 
-        const lobj = {
+        objs.push({
             _id: `${adapter.namespace}.${objId.replace(/\s/g, '_')}`,
             type: 'state',
             common: {
@@ -1217,8 +1217,7 @@ async function connect() {
             native: {
                 id: lid
             }
-        };
-        objs.push(lobj);
+        });
 
         for (const state of Object.keys(light.state)) {
             let value = light.state[state];
@@ -1349,13 +1348,6 @@ async function connect() {
                     lobj.common.type = 'string';
                     lobj.common.role = 'text';
                     break;
-                case 'transitiontime':
-                    lobj.common.type = 'number';
-                    lobj.common.role = 'level';
-                    lobj.common.min = 0;
-                    lobj.common.max = 64000;
-                    lobj.common.unit = 'ds';
-                    break;
                 default:
                     adapter.log.info(`skip light: ${objId}`);
                     break;
@@ -1415,7 +1407,7 @@ async function connect() {
                 on: false,
                 sat: 0,
                 xy: '0,0',
-                transmition: 0
+                transition: 0
             }
         };
 
@@ -1594,12 +1586,12 @@ async function connect() {
                 objs.push(gobj);
             } // endFor
 
-            // Create transmisiontime state
-            const lobj = {
+            // Create transisiontime state
+            objs.push({
                 _id: `${adapter.namespace}.${groupName.replace(/\s/g, '_')}.transision`,
                 type: 'state',
                 common: {
-                    name: objId,
+                    name: `${groupName}.transition`,
                     read: false,
                     write: true,
                     type: 'number',
@@ -1607,11 +1599,8 @@ async function connect() {
                     unit: 'ms',
                     def: 0
                 },
-                native: {
-                    id: lid
-                }
-            };
-            objs.push(lobj);
+                native: {}
+            });
 
             // Create anyOn state
             objs.push({

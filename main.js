@@ -929,7 +929,6 @@ async function connect() {
                 .connect(adapter.config.user);
         } // endElse
         config = await api.configuration.getAll();
-        adapter.log.debug(`connect config: ${JSON.stringify(config)} `);
     } catch (e) {
         adapter.log.error(e.message || e);
     } // endCatch

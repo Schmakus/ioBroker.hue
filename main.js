@@ -480,6 +480,15 @@ function startAdapter(options) {
                     lightState = lightState.transitiontime(transitiontime);
                 }
             }
+
+            if ('transition' in ls) {
+                const transition = Math.max(0, Math.min(65535, parseInt(ls.transition)));
+                if (!isNaN(transition)) {
+                    finalLS.transition = transition;
+                    lightState = lightState.transition(transition);
+                }
+            }
+
             if ('sat_inc' in ls && !('sat' in finalLS) && 'sat' in alls) {
                 finalLS.sat = (((ls.sat_inc + alls.sat) % 255) + 255) % 255;
                 if (!lampOn && (!('bri' in ls) || ls.bri === 0) && adapter.config.turnOnWithOthers) {

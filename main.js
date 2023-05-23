@@ -1214,8 +1214,8 @@ async function connect() {
             objs.push(lobj);
         } // endIf
 
-        // Create transmisiontime state for every light
-        const objId = `${channelName}.transision`;
+        // Create transition state for every light
+        const objId = `${channelName}.transition`;
 
         objs.push({
             _id: `${adapter.namespace}.${objId.replace(/\s/g, '_')}`,
@@ -1601,9 +1601,9 @@ async function connect() {
                 objs.push(gobj);
             } // endFor
 
-            // Create transisiontime state
+            // Create transitiontime state
             objs.push({
-                _id: `${adapter.namespace}.${groupName.replace(/\s/g, '_')}.transision`,
+                _id: `${adapter.namespace}.${groupName.replace(/\s/g, '_')}.transition`,
                 type: 'state',
                 common: {
                     name: `${groupName}.transition`,

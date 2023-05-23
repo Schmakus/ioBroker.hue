@@ -1199,6 +1199,27 @@ async function connect() {
             objs.push(lobj);
         } // endIf
 
+        // Create transmisiontime state for every light
+        const objId = `${channelName}.transmision`;
+
+        const lobj = {
+            _id: `${adapter.namespace}.${objId.replace(/\s/g, '_')}`,
+            type: 'state',
+            common: {
+                name: objId,
+                read: false,
+                write: true,
+                type: 'number',
+                role: 'value',
+                unit: 'ms',
+                def: 0
+            },
+            native: {
+                id: lid
+            }
+        };
+        objs.push(lobj);
+
         for (const state of Object.keys(light.state)) {
             let value = light.state[state];
             const objId = `${channelName}.${state}`;
@@ -1393,7 +1414,8 @@ async function connect() {
                 hue: 0,
                 on: false,
                 sat: 0,
-                xy: '0,0'
+                xy: '0,0',
+                transmition: 0
             }
         };
 
@@ -1561,13 +1583,6 @@ async function connect() {
                         gobj.common.type = 'number';
                         gobj.common.role = 'indicator.status';
                         break;
-                    case 'transitiontime':
-                        lobj.common.type = 'number';
-                        lobj.common.role = 'level';
-                        lobj.common.min = 0;
-                        lobj.common.max = 64000;
-                        lobj.common.unit = 'ds';
-                        break;
                     default:
                         adapter.log.info(`skip group: ${gobjId}`);
                         continue;
@@ -1578,6 +1593,25 @@ async function connect() {
                         : group.action[action];
                 objs.push(gobj);
             } // endFor
+
+            // Create transmisiontime state
+            const lobj = {
+                _id: `${adapter.namespace}.${groupName.replace(/\s/g, '_')}.transision`,
+                type: 'state',
+                common: {
+                    name: objId,
+                    read: false,
+                    write: true,
+                    type: 'number',
+                    role: 'value',
+                    unit: 'ms',
+                    def: 0
+                },
+                native: {
+                    id: lid
+                }
+            };
+            objs.push(lobj);
 
             // Create anyOn state
             objs.push({

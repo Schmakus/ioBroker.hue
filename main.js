@@ -224,6 +224,11 @@ function startAdapter(options) {
                         commandSupported = true;
                         alls[iddp] = idStates[idState].val;
                         break;
+                    case 'transition':
+                        alls[iddp] = idStates[idState].val;
+                        if (dp === 'transition') {
+                            ls[iddp] = idStates[idState].val;
+                        }
                     default:
                         alls[iddp] = idStates[idState].val;
                         break;
@@ -247,6 +252,7 @@ function startAdapter(options) {
             handleParam(`${fullIdBase}xy`, true);
             handleParam(`${fullIdBase}command`, true);
             handleParam(`${fullIdBase}level`, true);
+            handleParam(`${fullIdBase}transition`, true);
 
             // Walk through the rest or ack=false (=to be changed) values
             for (const idState in idStates) {

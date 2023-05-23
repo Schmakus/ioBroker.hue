@@ -393,7 +393,7 @@ function startAdapter(options) {
 
                 lightState = lightState.xy(parseFloat(xy.x), parseFloat(xy.y));
 
-                if (!lampOn && (!('bri' in ls) || ls.bri === 0)) {
+                if (!lampOn && (!('bri' in ls) || ls.bri === 0) && adapter.config.turnOnWithOthers) {
                     lightState = lightState.on();
                     lightState = lightState.bri(254);
                     finalLS.bri = 254;

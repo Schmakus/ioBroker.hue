@@ -139,6 +139,7 @@ function startAdapter(options) {
             let idStates;
             try {
                 idStates = await adapter.getStatesAsync(`${id}.*`);
+                adapter.log.debug(`idStates: ${JSON.stringify(idStates)}`);
             } catch (e) {
                 adapter.log.error(e);
                 return;

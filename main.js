@@ -24,7 +24,7 @@ let adapter;
 let pollingInterval;
 let reconnectTimeout;
 
-const SUPPORTED_SENSORS = ['ZLLSwitch', 'ZGPSwitch', 'Daylight', 'ZLLTemperature', 'ZLLPresence', 'ZLLLightLevel'];
+const SUPPORTED_SENSORS = ['ZLLSwitch', 'ZGPSwitch', 'Daylight', 'ZLLTemperature', 'ZLLPresence', 'ZLLLightLevel', 'ZLLRelativeRotary'];
 const SOFTWARE_SENSORS = ['CLIPGenericStatus', 'CLIPGenericFlag'];
 
 function startAdapter(options) {
@@ -1101,6 +1101,21 @@ async function connect() {
                         lobj.common.role = 'indicator.temperature';
                         lobj.common.write = false;
                         value = convertTemperature(value);
+                        break;
+                    case 'rotaryevent':
+                        lobj.common.type = 'number';
+                        lobj.common.role = 'state';
+                        lobj.common.write = false;
+                        break;
+                    case 'expectedrotation':
+                        lobj.common.type = 'number';
+                        lobj.common.role = 'state';
+                        lobj.common.write = false;
+                        break;
+                    case 'expectedeventduration':
+                        lobj.common.type = 'number';
+                        lobj.common.role = 'state';
+                        lobj.common.write = false;
                         break;
                     default:
                         lobj.common.type = 'mixed';

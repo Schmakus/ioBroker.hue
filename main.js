@@ -139,6 +139,7 @@ function startAdapter(options) {
             let idStates;
             try {
                 idStates = await adapter.getStatesAsync(`${id}.*`);
+                //toDelete
                 adapter.log.debug(`idStates: ${JSON.stringify(idStates)}`);
             } catch (e) {
                 adapter.log.error(e);
@@ -262,6 +263,9 @@ function startAdapter(options) {
                 }
                 handleParam(idState, false);
             }
+
+            //toDelete
+            if (alls['transition']) adapter.log.debug(`transition value: ${alls['transition']}`);
 
             let sceneId;
             // Handle commands at the end because they overwrite also anything

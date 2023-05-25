@@ -418,6 +418,9 @@ function startAdapter(options) {
                     lightState = lightState.bri(254);
                     finalLS.bri = 254;
                     finalLS.on = true;
+                } else if (!lampOn && dp === 'xy') {
+                    adapter.setState([id, dp].join('.'), { val: ls.xy, ack: true });
+                    return;
                 }
                 const rgb = hueHelper.XYBtoRGB(xy.x, xy.y, finalLS.bri / 254);
                 finalLS.r = Math.round(rgb.Red * 254);
@@ -475,6 +478,9 @@ function startAdapter(options) {
                     lightState = lightState.bri(254);
                     finalLS.bri = 254;
                     finalLS.on = true;
+                } else if (!lampOn && dp === 'hue') {
+                    adapter.setState([id, dp].join('.'), { val: ls.hue, ack: true });
+                    return;
                 }
             }
             if ('sat' in ls) {
@@ -487,6 +493,9 @@ function startAdapter(options) {
                     lightState = lightState.bri(254);
                     finalLS.bri = 254;
                     finalLS.on = true;
+                } else if (!lampOn && dp === 'sat') {
+                    adapter.setState([id, dp].join('.'), { val: ls.sat, ack: true });
+                    return;
                 }
             }
             if ('alert' in ls) {
@@ -506,20 +515,28 @@ function startAdapter(options) {
                     lightState = lightState.bri(254);
                     finalLS.bri = 254;
                     finalLS.on = true;
+                } else if (!lampOn && dp === 'effect') {
+                    adapter.setState([id, dp].join('.'), { val: ls.effect, ack: true });
+                    return;
                 }
-            }
+            } 
 
             if ('sat_inc' in ls && !('sat' in finalLS) && 'sat' in alls) {
                 finalLS.sat = (((ls.sat_inc + alls.sat) % 255) + 255) % 255;
+                lightState = lightState.sat(finalLS.sat);
+                lightState = lightState.transition(ls.transition);
+                finalLS.transition = ls.transition;
+
                 if (!lampOn && (!('bri' in ls) || ls.bri === 0) && adapter.config.turnOnWithOthers) {
                     lightState = lightState.on();
                     lightState = lightState.bri(254);
                     finalLS.bri = 254;
                     finalLS.on = true;
+                } else if (!lampOn && dp === 'sat_inc') {
+                    adapter.setState([id, dp].join('.'), { val: ls.sat_inc, ack: true });
+                    return;
                 }
-                lightState = lightState.sat(finalLS.sat);
-                lightState = lightState.transition(ls.transition);
-                finalLS.transition = ls.transition;
+
             }
             if ('hue_inc' in ls && !('hue' in finalLS) && 'hue' in alls) {
                 alls.hue = alls.hue % 360;
@@ -535,19 +552,26 @@ function startAdapter(options) {
                 }
 
                 finalLS.hue = (((ls.hue_inc + alls.hue) % 65536) + 65536) % 65536;
+                lightState = lightState.hue(finalLS.hue);
+                lightState = lightState.transition(ls.transition);
+                finalLS.transition = ls.transition;
 
                 if (!lampOn && (!('bri' in ls) || ls.bri === 0) && adapter.config.turnOnWithOthers) {
                     lightState = lightState.on();
                     lightState = lightState.bri(254);
                     finalLS.bri = 254;
                     finalLS.on = true;
+                } else if (!lampOn && dp === 'hue_inc') {
+                    adapter.setState([id, dp].join('.'), { val: ls.hue_inc, ack: true });
+                    return;
                 }
-                lightState = lightState.hue(finalLS.hue);
-                lightState = lightState.transition(ls.transition);
-                finalLS.transition = ls.transition;
+
             }
             if ('ct_inc' in ls && !('ct' in finalLS) && 'ct' in alls) {
                 alls.ct = 500 - 153 - ((alls.ct - 2200) / (6500 - 2200)) * (500 - 153) + 153;
+                lightState = lightState.ct(finalLS.ct);
+                lightState = lightState.transition(ls.transition);
+                finalLS.transition = ls.transition;
 
                 finalLS.ct = ((((alls.ct - 153 + ls.ct_inc) % 348) + 348) % 348) + 153;
                 if (!lampOn && (!('bri' in ls) || ls.bri === 0) && adapter.config.turnOnWithOthers) {
@@ -555,10 +579,11 @@ function startAdapter(options) {
                     lightState = lightState.bri(254);
                     finalLS.bri = 254;
                     finalLS.on = true;
+                } else if (!lampOn && dp === 'ct_inc') {
+                    adapter.setState([id, dp].join('.'), { val: ls.ct_inc, ack: true });
+                    return;
                 }
-                lightState = lightState.ct(finalLS.ct);
-                lightState = lightState.transition(ls.transition);
-                finalLS.transition = ls.transition;
+
             }
             if ('bri_inc' in ls) {
                 finalLS.bri = (((parseInt(alls.bri, 10) + parseInt(ls.bri_inc, 10)) % 255) + 255) % 255;

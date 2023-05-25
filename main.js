@@ -430,19 +430,24 @@ function startAdapter(options) {
                     return;
                 }
 
-                finalLS.ct = Math.max(2200, Math.min(6500, ls.ct));
+                ctTemp = Math.max(2200, Math.min(6500, ls.ct));
                 // convert kelvin to mired
-                finalLS.ct = Math.round(1e6 / finalLS.ct);
+                finalLS.ct = Math.round(1e6 / ctTemp);
                 lightState = lightState.ct(finalLS.ct);
                 lightState = lightState.transition(ls.transition);
                 finalLS.transition = ls.transition;
+                
 
                 if (!lampOn && (!('bri' in ls) || ls.bri === 0) && adapter.config.turnOnWithOthers) {
                     lightState = lightState.on();
                     lightState = lightState.bri(254);
                     finalLS.bri = 254;
                     finalLS.on = true;
+                } else if (!lampOn && dp === 'ct') {
+                    adapter.setState([id, dp].join('.'), { val: ctTemp, ack: true });
+                    return;
                 }
+
             }
             if ('hue' in ls) {
                 if (typeof ls.hue !== 'number') {

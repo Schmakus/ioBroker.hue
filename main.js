@@ -40,6 +40,15 @@ function startAdapter(options) {
             const tmp = id.split('.');
             let dp = tmp.pop();
 
+            if (dp === 'transition') {
+                if (!isNaN(state.val)) {
+                    adapter.setState([id, dp].join('.'), { val: state.val, ack: true });
+                } else {
+                    adapter.log.warn(`transition value is not a number. aborted!`);
+                    return;
+                }
+            }
+
             if (dp.startsWith('scene_')) {
                 try {
                     // its a scene -> get scene id to start it
@@ -240,7 +249,6 @@ function startAdapter(options) {
 
             // work through the relevant states in the correct order for the logic to work
             // but only if ack=true - so real values from device
-            handleParam(`${fullIdBase}transition`, true);
             handleParam(`${fullIdBase}on`, true);
             handleParam(`${fullIdBase}bri`, true);
             handleParam(`${fullIdBase}ct`, true);
@@ -255,6 +263,7 @@ function startAdapter(options) {
             handleParam(`${fullIdBase}xy`, true);
             handleParam(`${fullIdBase}command`, true);
             handleParam(`${fullIdBase}level`, true);
+            handleParam(`${fullIdBase}transition`, true);
 
             // Walk through the rest or ack=false (=to be changed) values
             for (const idState in idStates) {
@@ -336,22 +345,14 @@ function startAdapter(options) {
             }
 
 
-            if ('transition' in ls) {
-                ls.transition = Math.max(0, Math.min(65535, parseInt(ls.transition)));
-                //toDelete
-                adapter.log.debug(`transition is in ls: ${ls.transition}`);
-                if (!isNaN(ls.transition)) {
-                    //finalLS.transition = transition;
-                    //lightState = lightState.transition(transition);
-                    adapter.setState(`${id}.${dp}`, ls.transition, true);
-                } else {
-                    adapter.log.warn(`transition is not a number!`);
-                    return;
-                }
-            }
+            const transition = function () {
+                const time = Math.max(0, Math.min(65535, ls.transition));
+                return !time ? time : 0;
+            };
 
-            if (dp === 'transition') return;
-
+            //toDelete
+            adapter.log.debug(`transition function: ${transition()}`);
+            
             // apply rgb to xy with modelId
             if ('r' in ls || 'g' in ls || 'b' in ls) {
                 if (!('r' in ls) || ls.r > 255 || ls.r < 0 || typeof ls.r !== 'number') {

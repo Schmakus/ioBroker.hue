@@ -148,8 +148,6 @@ function startAdapter(options) {
             let idStates;
             try {
                 idStates = await adapter.getStatesAsync(`${id}.*`);
-                //toDelete
-                adapter.log.debug(`idStates: ${JSON.stringify(idStates)}`);
             } catch (e) {
                 adapter.log.error(e);
                 return;
@@ -236,10 +234,7 @@ function startAdapter(options) {
                         alls[iddp] = idStates[idState].val;
                         break;
                     case 'transition':
-                        alls[iddp] = idStates[idState].val;
-                        if (dp === 'transition') {
-                            ls[iddp] = idStates[idState].val;
-                        }
+                        alls[iddp] = ls[iddp] = idStates[idState].val > 0 ? Math.max(100, Math.min(65535, idStates[idState].val)) : 0;
                     default:
                         alls[iddp] = idStates[idState].val;
                         break;
@@ -344,10 +339,7 @@ function startAdapter(options) {
                 }
             }
 
-
-            const transition = ('transition' in ls && ls.transition > 0) ? Math.max(100, Math.min(65535, ls.transition)) : 0;
-            //toDelete
-            adapter.log.debug(`transition function: ${transition}`);
+            adapter.log.debug(`transition is: ${ls.transition}`);
             
             // apply rgb to xy with modelId
             if ('r' in ls || 'g' in ls || 'b' in ls) {
@@ -384,15 +376,15 @@ function startAdapter(options) {
                 finalLS.bri = bri;
                 // if nativeTurnOnOffBehaviour -> only turn group on if no lamp is on yet on brightness change
                 if (!adapter.config.nativeTurnOffBehaviour || !alls['anyOn']) {
-                    finalLS.transition = transition;
+                    finalLS.transition = ls.transition;
                     finalLS.on = true;
-                    lightState = lightState.transition(transition);
+                    lightState = lightState.transition(ls.transition);
                     lightState = lightState.on();
                 }
             } else {
                 lightState = lightState.off();
-                lightState = lightState.transition(transition);
-                finalLS.transition = transition;
+                lightState = lightState.transition(ls.transition);
+                finalLS.transition = ls.transition;
                 finalLS.bri = 0;
                 finalLS.on = false;
             }
@@ -420,8 +412,8 @@ function startAdapter(options) {
 
                 finalLS.xy = `${xy.x},${xy.y}`;
                 lightState = lightState.xy(parseFloat(xy.x), parseFloat(xy.y));
-                lightState = lightState.transition(transition);
-                finalLS.transition = transition;
+                lightState = lightState.transition(ls.transition);
+                finalLS.transition = ls.transition;
 
                 if (!lampOn && (!('bri' in ls) || ls.bri === 0) && adapter.config.turnOnWithOthers) {
                     lightState = lightState.on();
@@ -444,8 +436,8 @@ function startAdapter(options) {
                 // convert kelvin to mired
                 finalLS.ct = Math.round(1e6 / finalLS.ct);
                 lightState = lightState.ct(finalLS.ct);
-                lightState = lightState.transition(transition);
-                finalLS.transition = transition;
+                lightState = lightState.transition(ls.transition);
+                finalLS.transition = ls.transition;
 
                 if (!lampOn && (!('bri' in ls) || ls.bri === 0) && adapter.config.turnOnWithOthers) {
                     lightState = lightState.on();
@@ -473,8 +465,8 @@ function startAdapter(options) {
                 }
 
                 lightState = lightState.hue(finalLS.hue);
-                lightState = lightState.transition(transition);
-                finalLS.transition = transition;
+                lightState = lightState.transition(ls.transition);
+                finalLS.transition = ls.transition;
 
                 if (!lampOn && (!('bri' in ls) || ls.bri === 0) && adapter.config.turnOnWithOthers) {
                     lightState = lightState.on();
@@ -486,8 +478,8 @@ function startAdapter(options) {
             if ('sat' in ls) {
                 finalLS.sat = Math.max(0, Math.min(254, ls.sat)) || 0;
                 lightState = lightState.sat(finalLS.sat);
-                lightState = lightState.transition(transition);
-                finalLS.transition = transition;
+                lightState = lightState.transition(ls.transition);
+                finalLS.transition = ls.transition;
                 if (!lampOn && (!('bri' in ls) || ls.bri === 0) && adapter.config.turnOnWithOthers) {
                     lightState = lightState.on();
                     lightState = lightState.bri(254);
@@ -524,8 +516,8 @@ function startAdapter(options) {
                     finalLS.on = true;
                 }
                 lightState = lightState.sat(finalLS.sat);
-                lightState = lightState.transition(transition);
-                finalLS.transition = transition;
+                lightState = lightState.transition(ls.transition);
+                finalLS.transition = ls.transition;
             }
             if ('hue_inc' in ls && !('hue' in finalLS) && 'hue' in alls) {
                 alls.hue = alls.hue % 360;
@@ -549,8 +541,8 @@ function startAdapter(options) {
                     finalLS.on = true;
                 }
                 lightState = lightState.hue(finalLS.hue);
-                lightState = lightState.transition(transition);
-                finalLS.transition = transition;
+                lightState = lightState.transition(ls.transition);
+                finalLS.transition = ls.transition;
             }
             if ('ct_inc' in ls && !('ct' in finalLS) && 'ct' in alls) {
                 alls.ct = 500 - 153 - ((alls.ct - 2200) / (6500 - 2200)) * (500 - 153) + 153;
@@ -563,8 +555,8 @@ function startAdapter(options) {
                     finalLS.on = true;
                 }
                 lightState = lightState.ct(finalLS.ct);
-                lightState = lightState.transition(transition);
-                finalLS.transition = transition;
+                lightState = lightState.transition(ls.transition);
+                finalLS.transition = ls.transition;
             }
             if ('bri_inc' in ls) {
                 finalLS.bri = (((parseInt(alls.bri, 10) + parseInt(ls.bri_inc, 10)) % 255) + 255) % 255;
@@ -581,8 +573,8 @@ function startAdapter(options) {
                     lightState = lightState.on();
                 }
                 lightState = lightState.bri(finalLS.bri);
-                lightState = lightState.transition(transition);
-                finalLS.transition = transition;
+                lightState = lightState.transition(ls.transition);
+                finalLS.transition = ls.transition;
             }
 
             // change colormode

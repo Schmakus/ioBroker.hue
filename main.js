@@ -265,9 +265,9 @@ function startAdapter(options) {
             }
 
             //Set transition
-            const transition = ls.transition || 0;
+            //const transition = ls.transition || 0;
             //toDelete
-            adapter.log.debug(`transition: ${transition}ms`);
+            //adapter.log.debug(`transition: ${transition}ms`);
 
             let sceneId;
             // Handle commands at the end because they overwrite also anything
@@ -497,10 +497,11 @@ function startAdapter(options) {
             }
 
             if ('transition' in ls) {
-                transition = Math.max(0, Math.min(65535, parseInt(ls.transition)));
+                const transition = Math.max(0, Math.min(65535, parseInt(ls.transition)));
                 if (!isNaN(transition)) {
                     finalLS.transition = transition;
                     lightState = lightState.transition(transition);
+                    adapter.setState(id, transition, true);
                 }
             }
 

@@ -501,7 +501,9 @@ function startAdapter(options) {
                 if (!isNaN(transition)) {
                     finalLS.transition = transition;
                     lightState = lightState.transition(transition);
-                    adapter.setState(id, transition, true);
+                    //toDelete
+                    adapter.log.debug(`id of transition: ${id}`);
+                    //adapter.setState(id, transition, true);
                 }
             }
 

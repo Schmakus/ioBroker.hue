@@ -338,7 +338,7 @@ function startAdapter(options) {
 
             if ('transition' in ls) {
                 ls.transition = Math.max(0, Math.min(65535, parseInt(ls.transition)));
-                if (!isNaN(transition)) {
+                if (!isNaN(ls.transition)) {
                     //finalLS.transition = transition;
                     //lightState = lightState.transition(transition);
                     adapter.setState(`${id}.${dp}`, ls.transition, true);

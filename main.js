@@ -1246,7 +1246,7 @@ async function connect() {
             _id: `${adapter.namespace}.${objIdTransition.replace(/\s/g, '_')}`,
             type: 'state',
             common: {
-                name: objId,
+                name: objIdTransition,
                 read: true,
                 write: true,
                 type: 'number',

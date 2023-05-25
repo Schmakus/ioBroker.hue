@@ -329,8 +329,6 @@ function startAdapter(options) {
             if (!obj) {
                 adapter.log.error(`Object "${id}" on stateChange is null or undefined`);
                 return;
-            } else {
-                adapter.log.debug(`get lightstate: ${JSON.stringify(obj)}`);
             }
 
             // apply rgb to xy with modelId
@@ -502,8 +500,8 @@ function startAdapter(options) {
                     finalLS.transition = transition;
                     lightState = lightState.transition(transition);
                     //toDelete
-                    adapter.log.debug(`id of transition: ${id}`);
-                    //adapter.setState(id, transition, true);
+                    adapter.log.debug(`id of transition: ${id}.${dp}`);
+                    adapter.setState(`${id}.${dp}`, transition, true);
                 }
             }
 

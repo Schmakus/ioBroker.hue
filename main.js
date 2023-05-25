@@ -423,7 +423,7 @@ function startAdapter(options) {
                     finalLS.bri = 254;
                     finalLS.on = true;
                 } else if (!lampOn && dp === 'xy') {
-                    //return;
+                    return;
                 }
                 const rgb = hueHelper.XYBtoRGB(xy.x, xy.y, finalLS.bri / 254);
                 finalLS.r = Math.round(rgb.Red * 254);
@@ -449,7 +449,7 @@ function startAdapter(options) {
                     finalLS.bri = 254;
                     finalLS.on = true;
                 } else if (!lampOn && dp === 'ct') {
-                    //return;
+                    return;
                 }
 
             }
@@ -481,7 +481,7 @@ function startAdapter(options) {
                     finalLS.bri = 254;
                     finalLS.on = true;
                 } else if (!lampOn && dp === 'hue') {
-                    //return;
+                    return;
                 }
             }
             if ('sat' in ls) {
@@ -495,7 +495,7 @@ function startAdapter(options) {
                     finalLS.bri = 254;
                     finalLS.on = true;
                 } else if (!lampOn && dp === 'sat') {
-                    //return;
+                    return;
                 }
             }
             if ('alert' in ls) {
@@ -516,7 +516,7 @@ function startAdapter(options) {
                     finalLS.bri = 254;
                     finalLS.on = true;
                 } else if (!lampOn && dp === 'effect') {
-                    //return;
+                    return;
                 }
             } 
 
@@ -532,7 +532,7 @@ function startAdapter(options) {
                     finalLS.bri = 254;
                     finalLS.on = true;
                 } else if (!lampOn && dp === 'sat_inc') {
-                    //return;
+                    return;
                 }
 
             }
@@ -560,7 +560,7 @@ function startAdapter(options) {
                     finalLS.bri = 254;
                     finalLS.on = true;
                 } else if (!lampOn && dp === 'hue_inc') {
-                    //return;
+                    return;
                 }
 
             }
@@ -577,7 +577,7 @@ function startAdapter(options) {
                     finalLS.bri = 254;
                     finalLS.on = true;
                 } else if (!lampOn && dp === 'ct_inc') {
-                    //return;
+                    return;
                 }
 
             }
@@ -652,7 +652,7 @@ function startAdapter(options) {
                     });
                     adapter.log.debug(`updated group state (${groupIds[id]}) after change`);
                 } catch (e) {
-                    adapter.log.warn(`Could not set GroupState of ${obj.common.name}: ${e.message}`);
+                    adapter.log.error(`Could not set GroupState of ${obj.common.name}: ${e.message}`);
                 }
             } else if (obj.common.role === 'switch') {
                 if (Object.prototype.hasOwnProperty.call(finalLS, 'on')) {
@@ -670,7 +670,7 @@ function startAdapter(options) {
                         });
                         adapter.log.debug(`updated lighstate(${channelIds[id]}) after change`);
                     } catch (e) {
-                        adapter.log.warn(`Could not set LightState of ${obj.common.name}: ${e.message}`);
+                        adapter.log.error(`Could not set LightState of ${obj.common.name}: ${e.message}`);
                     }
                 } else {
                     adapter.log.warn('invalid switch operation');
@@ -687,7 +687,7 @@ function startAdapter(options) {
                     });
                     adapter.log.debug(`updated lighstate(${channelIds[id]}) after change`);
                 } catch (e) {
-                    adapter.log.warn(`Could not set LightState of ${obj.common.name}: ${e.message}`);
+                    adapter.log.error(`Could not set LightState of ${obj.common.name}: ${e.message}`);
                 }
             } // endElse
         },

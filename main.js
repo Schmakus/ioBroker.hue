@@ -345,13 +345,9 @@ function startAdapter(options) {
             }
 
 
-            const transition = function () {
-                const time = Math.max(0, Math.min(65535, ls.transition));
-                return !time ? time : 0;
-            };
-
+            const transition = ('transition' in ls && ls.transition > 0) ? Math.max(100, Math.min(65535, ls.transition)) : 0;
             //toDelete
-            adapter.log.debug(`transition function: ${transition()}`);
+            adapter.log.debug(`transition function: ${transition}`);
             
             // apply rgb to xy with modelId
             if ('r' in ls || 'g' in ls || 'b' in ls) {

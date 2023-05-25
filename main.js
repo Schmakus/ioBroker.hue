@@ -594,13 +594,20 @@ function startAdapter(options) {
             // if dp is on and we use native turn off behaviour only set the lightState
             if (dp === 'on' && adapter.config.nativeTurnOffBehaviour) {
                 // todo: this is somehow dirty but the code above is messy -> integrate above in a more clever way later
+                finalLS = {};
                 lightState = /(LightGroup)|(Room)|(Zone)|(Entertainment)/g.test(obj.common.role)
                     ? new v3.lightStates.GroupLightState()
                     : new v3.lightStates.LightState();
                 if (state.val) {
-                    lightState.on();    
+                    lightState.transition(ls.transition);
+                    lightState.on();
+                    finalLS.on = true;  
+                    finalLS.transition = ls.transition;
                 } else {
+                    lightState.transition(ls.transition);
                     lightState.off();
+                    finalLS.on = false;
+                    finalLS.transition = ls.transition;
                 } // endElse
             }
 

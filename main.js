@@ -240,6 +240,7 @@ function startAdapter(options) {
 
             // work through the relevant states in the correct order for the logic to work
             // but only if ack=true - so real values from device
+            handleParam(`${fullIdBase}transition`, true);
             handleParam(`${fullIdBase}on`, true);
             handleParam(`${fullIdBase}bri`, true);
             handleParam(`${fullIdBase}ct`, true);
@@ -254,7 +255,6 @@ function startAdapter(options) {
             handleParam(`${fullIdBase}xy`, true);
             handleParam(`${fullIdBase}command`, true);
             handleParam(`${fullIdBase}level`, true);
-            handleParam(`${fullIdBase}transition`, true);
 
             // Walk through the rest or ack=false (=to be changed) values
             for (const idState in idStates) {
@@ -263,11 +263,6 @@ function startAdapter(options) {
                 }
                 handleParam(idState, false);
             }
-
-            //Set transition
-            //const transition = ls.transition || 0;
-            //toDelete
-            //adapter.log.debug(`transition: ${transition}ms`);
 
             let sceneId;
             // Handle commands at the end because they overwrite also anything
@@ -331,6 +326,26 @@ function startAdapter(options) {
                 return;
             }
 
+            // only available in command state
+            if ('transitiontime' in ls) {
+                const transitiontime = Math.max(0, Math.min(65535, parseInt(ls.transitiontime)));
+                if (!isNaN(transitiontime)) {
+                    finalLS.transitiontime = transitiontime;
+                    lightState = lightState.transitiontime(transitiontime);
+                }
+            }
+
+            if ('transition' in ls) {
+                const transition = Math.max(0, Math.min(65535, parseInt(ls.transition)));
+                if (!isNaN(transition)) {
+                    //finalLS.transition = transition;
+                    //lightState = lightState.transition(transition);
+                    adapter.setState(`${id}.${dp}`, transition, true);
+                }
+            }
+
+            if (dp === transition) return;
+
             // apply rgb to xy with modelId
             if ('r' in ls || 'g' in ls || 'b' in ls) {
                 if (!('r' in ls) || ls.r > 255 || ls.r < 0 || typeof ls.r !== 'number') {
@@ -366,11 +381,15 @@ function startAdapter(options) {
                 finalLS.bri = bri;
                 // if nativeTurnOnOffBehaviour -> only turn group on if no lamp is on yet on brightness change
                 if (!adapter.config.nativeTurnOffBehaviour || !alls['anyOn']) {
+                    finalLS.transition = transition;
                     finalLS.on = true;
+                    lightState = lightState.transition(transition);
                     lightState = lightState.on();
                 }
             } else {
                 lightState = lightState.off();
+                lightState = lightState.transition(transition);
+                finalLS.transition = transition;
                 finalLS.bri = 0;
                 finalLS.on = false;
             }
@@ -397,8 +416,9 @@ function startAdapter(options) {
                 }
 
                 finalLS.xy = `${xy.x},${xy.y}`;
-
                 lightState = lightState.xy(parseFloat(xy.x), parseFloat(xy.y));
+                lightState = lightState.transition(transition);
+                finalLS.transition = transition;
 
                 if (!lampOn && (!('bri' in ls) || ls.bri === 0) && adapter.config.turnOnWithOthers) {
                     lightState = lightState.on();
@@ -420,8 +440,10 @@ function startAdapter(options) {
                 finalLS.ct = Math.max(2200, Math.min(6500, ls.ct));
                 // convert kelvin to mired
                 finalLS.ct = Math.round(1e6 / finalLS.ct);
-
                 lightState = lightState.ct(finalLS.ct);
+                lightState = lightState.transition(transition);
+                finalLS.transition = transition;
+
                 if (!lampOn && (!('bri' in ls) || ls.bri === 0) && adapter.config.turnOnWithOthers) {
                     lightState = lightState.on();
                     lightState = lightState.bri(254);
@@ -448,6 +470,9 @@ function startAdapter(options) {
                 }
 
                 lightState = lightState.hue(finalLS.hue);
+                lightState = lightState.transition(transition);
+                finalLS.transition = transition;
+
                 if (!lampOn && (!('bri' in ls) || ls.bri === 0) && adapter.config.turnOnWithOthers) {
                     lightState = lightState.on();
                     lightState = lightState.bri(254);
@@ -458,6 +483,8 @@ function startAdapter(options) {
             if ('sat' in ls) {
                 finalLS.sat = Math.max(0, Math.min(254, ls.sat)) || 0;
                 lightState = lightState.sat(finalLS.sat);
+                lightState = lightState.transition(transition);
+                finalLS.transition = transition;
                 if (!lampOn && (!('bri' in ls) || ls.bri === 0) && adapter.config.turnOnWithOthers) {
                     lightState = lightState.on();
                     lightState = lightState.bri(254);
@@ -485,26 +512,6 @@ function startAdapter(options) {
                 }
             }
 
-            // only available in command state
-            if ('transitiontime' in ls) {
-                const transitiontime = Math.max(0, Math.min(65535, parseInt(ls.transitiontime)));
-                if (!isNaN(transitiontime)) {
-                    finalLS.transitiontime = transitiontime;
-                    lightState = lightState.transitiontime(transitiontime);
-                }
-            }
-
-            if ('transition' in ls) {
-                const transition = Math.max(0, Math.min(65535, parseInt(ls.transition)));
-                if (!isNaN(transition)) {
-                    finalLS.transition = transition;
-                    lightState = lightState.transition(transition);
-                    //toDelete
-                    adapter.log.debug(`id of transition: ${id}.${dp}`);
-                    adapter.setState(`${id}.${dp}`, transition, true);
-                }
-            }
-
             if ('sat_inc' in ls && !('sat' in finalLS) && 'sat' in alls) {
                 finalLS.sat = (((ls.sat_inc + alls.sat) % 255) + 255) % 255;
                 if (!lampOn && (!('bri' in ls) || ls.bri === 0) && adapter.config.turnOnWithOthers) {
@@ -514,6 +521,8 @@ function startAdapter(options) {
                     finalLS.on = true;
                 }
                 lightState = lightState.sat(finalLS.sat);
+                lightState = lightState.transition(transition);
+                finalLS.transition = transition;
             }
             if ('hue_inc' in ls && !('hue' in finalLS) && 'hue' in alls) {
                 alls.hue = alls.hue % 360;
@@ -537,6 +546,8 @@ function startAdapter(options) {
                     finalLS.on = true;
                 }
                 lightState = lightState.hue(finalLS.hue);
+                lightState = lightState.transition(transition);
+                finalLS.transition = transition;
             }
             if ('ct_inc' in ls && !('ct' in finalLS) && 'ct' in alls) {
                 alls.ct = 500 - 153 - ((alls.ct - 2200) / (6500 - 2200)) * (500 - 153) + 153;
@@ -549,6 +560,8 @@ function startAdapter(options) {
                     finalLS.on = true;
                 }
                 lightState = lightState.ct(finalLS.ct);
+                lightState = lightState.transition(transition);
+                finalLS.transition = transition;
             }
             if ('bri_inc' in ls) {
                 finalLS.bri = (((parseInt(alls.bri, 10) + parseInt(ls.bri_inc, 10)) % 255) + 255) % 255;
@@ -565,6 +578,8 @@ function startAdapter(options) {
                     lightState = lightState.on();
                 }
                 lightState = lightState.bri(finalLS.bri);
+                lightState = lightState.transition(transition);
+                finalLS.transition = transition;
             }
 
             // change colormode
@@ -588,7 +603,7 @@ function startAdapter(options) {
                     ? new v3.lightStates.GroupLightState()
                     : new v3.lightStates.LightState();
                 if (state.val) {
-                    lightState.on();
+                    lightState.on();    
                 } else {
                     lightState.off();
                 } // endElse

@@ -437,7 +437,6 @@ function startAdapter(options) {
                 lightState = lightState.transition(ls.transition);
                 finalLS.transition = ls.transition;
                 
-
                 if (!lampOn && (!('bri' in ls) || ls.bri === 0) && adapter.config.turnOnWithOthers) {
                     lightState = lightState.on();
                     lightState = lightState.bri(254);

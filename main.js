@@ -477,7 +477,6 @@ function startAdapter(options) {
                     finalLS.bri = 254;
                     finalLS.on = true;
                 } else if (!lampOn && dp === 'hue') {
-                    adapter.setState([id, dp].join('.'), { val: ls.hue, ack: true });
                     return;
                 }
             }

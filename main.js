@@ -423,7 +423,7 @@ function startAdapter(options) {
                     finalLS.bri = 254;
                     finalLS.on = true;
                 } else if (!lampOn && dp === 'xy') {
-                    return;
+                    //return;
                 }
                 const rgb = hueHelper.XYBtoRGB(xy.x, xy.y, finalLS.bri / 254);
                 finalLS.r = Math.round(rgb.Red * 254);
@@ -449,7 +449,7 @@ function startAdapter(options) {
                     finalLS.bri = 254;
                     finalLS.on = true;
                 } else if (!lampOn && dp === 'ct') {
-                    return;
+                    //return;
                 }
 
             }
@@ -481,7 +481,7 @@ function startAdapter(options) {
                     finalLS.bri = 254;
                     finalLS.on = true;
                 } else if (!lampOn && dp === 'hue') {
-                    return;
+                    //return;
                 }
             }
             if ('sat' in ls) {
@@ -495,7 +495,7 @@ function startAdapter(options) {
                     finalLS.bri = 254;
                     finalLS.on = true;
                 } else if (!lampOn && dp === 'sat') {
-                    return;
+                    //return;
                 }
             }
             if ('alert' in ls) {
@@ -516,7 +516,7 @@ function startAdapter(options) {
                     finalLS.bri = 254;
                     finalLS.on = true;
                 } else if (!lampOn && dp === 'effect') {
-                    return;
+                    //return;
                 }
             } 
 
@@ -532,7 +532,7 @@ function startAdapter(options) {
                     finalLS.bri = 254;
                     finalLS.on = true;
                 } else if (!lampOn && dp === 'sat_inc') {
-                    return;
+                    //return;
                 }
 
             }
@@ -560,7 +560,7 @@ function startAdapter(options) {
                     finalLS.bri = 254;
                     finalLS.on = true;
                 } else if (!lampOn && dp === 'hue_inc') {
-                    return;
+                    //return;
                 }
 
             }
@@ -577,7 +577,7 @@ function startAdapter(options) {
                     finalLS.bri = 254;
                     finalLS.on = true;
                 } else if (!lampOn && dp === 'ct_inc') {
-                    return;
+                    //return;
                 }
 
             }

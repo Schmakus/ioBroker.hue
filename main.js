@@ -338,8 +338,6 @@ function startAdapter(options) {
                     lightState = lightState.transitiontime(transitiontime);
                 }
             }
-
-            adapter.log.debug(`transition is: ${ls.transition}`);
             
             // apply rgb to xy with modelId
             if ('r' in ls || 'g' in ls || 'b' in ls) {

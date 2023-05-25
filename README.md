@@ -77,6 +77,7 @@ In den Adapter-Settings muss die IP der Hue Bridge sowie ein Username konfigurie
 ### __WORK IN PROGRESS__
 * (Schmakus) possibility to disable turn on lights with states other than `on` and `brightness` (closes #386)
 * (Schmakus) support hue tap dial switch (closes #368)
+* (Schmakus) add transition state (milliseconds)
 ### 3.7.1 (2022-07-12)
 * (Eistee82) also update state for `CLIPGenericFlag` sensors
 

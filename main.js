@@ -374,11 +374,11 @@ function startAdapter(options) {
                 }
                 lightState = lightState.bri(bri);
                 finalLS.bri = bri;
+                lightState = lightState.transition(ls.transition);
+                finalLS.transition = ls.transition;
                 // if nativeTurnOnOffBehaviour -> only turn group on if no lamp is on yet on brightness change
                 if (!adapter.config.nativeTurnOffBehaviour || !alls['anyOn']) {
-                    finalLS.transition = ls.transition;
                     finalLS.on = true;
-                    lightState = lightState.transition(ls.transition);
                     lightState = lightState.on();
                 }
             } else {

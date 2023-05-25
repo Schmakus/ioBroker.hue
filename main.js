@@ -206,13 +206,13 @@ function startAdapter(options) {
                     case 'g':
                     case 'b':
                         alls[iddp] = idStates[idState].val;
-                        if (dp === 'r' || dp === 'g' || dp === 'b') {
+                        if (dp === 'r' || dp === 'g' || dp === 'b' || !idStates[idState].ack) {
                             ls[iddp] = idStates[idState].val;
                         }
                         break;
                     case 'ct':
                         alls[iddp] = idStates[idState].val;
-                        if (dp === 'ct') {
+                        if (dp === 'ct' || !idStates[idState].ack) {
                             ls[iddp] = idStates[idState].val;
                         }
                         break;
@@ -225,7 +225,7 @@ function startAdapter(options) {
                         break;
                     case 'xy':
                         alls[iddp] = idStates[idState].val;
-                        if (dp === 'xy') {
+                        if (dp === 'xy'  || !idStates[idState].ack) {
                             ls[iddp] = idStates[idState].val;
                         }
                         break;

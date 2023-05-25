@@ -1240,14 +1240,14 @@ async function connect() {
         } // endIf
 
         // Create transition state for every light
-        const objId = `${channelName}.transition`;
+        const objIdTransition = `${channelName}.transition`;
 
         objs.push({
-            _id: `${adapter.namespace}.${objId.replace(/\s/g, '_')}`,
+            _id: `${adapter.namespace}.${objIdTransition.replace(/\s/g, '_')}`,
             type: 'state',
             common: {
                 name: objId,
-                read: false,
+                read: true,
                 write: true,
                 type: 'number',
                 role: 'value',

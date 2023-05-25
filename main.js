@@ -419,7 +419,6 @@ function startAdapter(options) {
                     finalLS.bri = 254;
                     finalLS.on = true;
                 } else if (!lampOn && dp === 'xy') {
-                    adapter.setState([id, dp].join('.'), { val: ls.xy, ack: true });
                     return;
                 }
                 const rgb = hueHelper.XYBtoRGB(xy.x, xy.y, finalLS.bri / 254);
@@ -446,7 +445,6 @@ function startAdapter(options) {
                     finalLS.bri = 254;
                     finalLS.on = true;
                 } else if (!lampOn && dp === 'ct') {
-                    adapter.setState([id, dp].join('.'), { val: ls.ct, ack: true });
                     return;
                 }
 
@@ -494,7 +492,6 @@ function startAdapter(options) {
                     finalLS.bri = 254;
                     finalLS.on = true;
                 } else if (!lampOn && dp === 'sat') {
-                    adapter.setState([id, dp].join('.'), { val: ls.sat, ack: true });
                     return;
                 }
             }
@@ -516,7 +513,6 @@ function startAdapter(options) {
                     finalLS.bri = 254;
                     finalLS.on = true;
                 } else if (!lampOn && dp === 'effect') {
-                    adapter.setState([id, dp].join('.'), { val: ls.effect, ack: true });
                     return;
                 }
             } 
@@ -533,7 +529,6 @@ function startAdapter(options) {
                     finalLS.bri = 254;
                     finalLS.on = true;
                 } else if (!lampOn && dp === 'sat_inc') {
-                    adapter.setState([id, dp].join('.'), { val: ls.sat_inc, ack: true });
                     return;
                 }
 
@@ -562,7 +557,6 @@ function startAdapter(options) {
                     finalLS.bri = 254;
                     finalLS.on = true;
                 } else if (!lampOn && dp === 'hue_inc') {
-                    adapter.setState([id, dp].join('.'), { val: ls.hue_inc, ack: true });
                     return;
                 }
 
@@ -580,7 +574,6 @@ function startAdapter(options) {
                     finalLS.bri = 254;
                     finalLS.on = true;
                 } else if (!lampOn && dp === 'ct_inc') {
-                    adapter.setState([id, dp].join('.'), { val: ls.ct_inc, ack: true });
                     return;
                 }
 

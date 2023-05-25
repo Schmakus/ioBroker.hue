@@ -335,12 +335,15 @@ function startAdapter(options) {
                 }
             }
 
+            let transition = 0;
             if ('transition' in ls) {
-                const transition = Math.max(0, Math.min(65535, parseInt(ls.transition)));
+                transition = Math.max(0, Math.min(65535, parseInt(ls.transition)));
                 if (!isNaN(transition)) {
                     //finalLS.transition = transition;
                     //lightState = lightState.transition(transition);
                     adapter.setState(`${id}.${dp}`, transition, true);
+                } else {
+                    adapter.log.warn(`transition is not a number!`);
                 }
             }
 

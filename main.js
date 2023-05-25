@@ -42,7 +42,7 @@ function startAdapter(options) {
 
             if (dp === 'transition') {
                 if (!isNaN(state.val)) {
-                    adapter.setState([id, dp].join('.'), { val: state.val, ack: true });
+                    adapter.setState(id, { val: state.val, ack: true });
                 } else {
                     adapter.log.warn(`transition value is not a number. aborted!`);
                     return;

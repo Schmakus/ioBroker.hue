@@ -652,7 +652,7 @@ function startAdapter(options) {
                     });
                     adapter.log.debug(`updated group state (${groupIds[id]}) after change`);
                 } catch (e) {
-                    adapter.log.error(`Could not set GroupState of ${obj.common.name}: ${e.message}`);
+                    adapter.log.warn(`Could not set GroupState of ${obj.common.name}: ${e.message}`);
                 }
             } else if (obj.common.role === 'switch') {
                 if (Object.prototype.hasOwnProperty.call(finalLS, 'on')) {
@@ -670,7 +670,7 @@ function startAdapter(options) {
                         });
                         adapter.log.debug(`updated lighstate(${channelIds[id]}) after change`);
                     } catch (e) {
-                        adapter.log.error(`Could not set LightState of ${obj.common.name}: ${e.message}`);
+                        adapter.log.warn(`Could not set LightState of ${obj.common.name}: ${e.message}`);
                     }
                 } else {
                     adapter.log.warn('invalid switch operation');
@@ -687,7 +687,7 @@ function startAdapter(options) {
                     });
                     adapter.log.debug(`updated lighstate(${channelIds[id]}) after change`);
                 } catch (e) {
-                    adapter.log.error(`Could not set LightState of ${obj.common.name}: ${e.message}`);
+                    adapter.log.warn(`Could not set LightState of ${obj.common.name}: ${e.message}`);
                 }
             } // endElse
         },

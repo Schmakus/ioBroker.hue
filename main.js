@@ -268,6 +268,10 @@ function startAdapter(options) {
                 handleParam(idState, false);
             }
 
+            //toDelete
+            adapter.log.debug(`ls: ${JSON.stringify(ls)}`);
+            adapter.log.debug(`alls: ${JSON.stringify(alls)}`);
+
             let sceneId;
             // Handle commands at the end because they overwrite also anything
             if (commandSupported && dp === 'command') {

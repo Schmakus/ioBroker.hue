@@ -432,7 +432,7 @@ function startAdapter(options) {
 
                 finalLS.ct = Math.max(2200, Math.min(6500, ls.ct));
                 // convert kelvin to mired
-                finalLS.ct = Math.round(1e6 / ctTemp);
+                finalLS.ct = Math.round(1e6 / finalLS.ct);
                 lightState = lightState.ct(finalLS.ct);
                 lightState = lightState.transition(ls.transition);
                 finalLS.transition = ls.transition;

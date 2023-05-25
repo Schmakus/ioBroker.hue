@@ -219,7 +219,7 @@ function startAdapter(options) {
                     case 'hue':
                     case 'sat':
                         alls[iddp] = idStates[idState].val;
-                        if (dp === 'hue' || dp === 'sat') {
+                        if (dp === 'hue' || dp === 'sat' || !idStates[idState].ack) {
                             ls[iddp] = idStates[idState].val;
                         }
                         break;

@@ -430,7 +430,7 @@ function startAdapter(options) {
                     return;
                 }
 
-                ctTemp = Math.max(2200, Math.min(6500, ls.ct));
+                finalLS.ct = Math.max(2200, Math.min(6500, ls.ct));
                 // convert kelvin to mired
                 finalLS.ct = Math.round(1e6 / ctTemp);
                 lightState = lightState.ct(finalLS.ct);
@@ -443,7 +443,7 @@ function startAdapter(options) {
                     finalLS.bri = 254;
                     finalLS.on = true;
                 } else if (!lampOn && dp === 'ct') {
-                    adapter.setState([id, dp].join('.'), { val: ctTemp, ack: true });
+                    adapter.setState([id, dp].join('.'), { val: ls.ct, ack: true });
                     return;
                 }
 

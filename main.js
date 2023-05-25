@@ -43,11 +43,10 @@ function startAdapter(options) {
             if (dp === 'transition') {
                 if (!isNaN(state.val)) {
                     adapter.setState(id, { val: state.val, ack: true });
-                    return;
                 } else {
                     adapter.log.warn(`transition value is not a number. aborted!`);
-                    return;
                 }
+                return;
             }
 
             if (dp.startsWith('scene_')) {

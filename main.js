@@ -329,6 +329,8 @@ function startAdapter(options) {
             if (!obj) {
                 adapter.log.error(`Object "${id}" on stateChange is null or undefined`);
                 return;
+            } else {
+                adapter.log.debug(`get lightstate: ${JSON.stringify(obj)}`);
             }
 
             // apply rgb to xy with modelId

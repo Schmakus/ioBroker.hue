@@ -335,15 +335,16 @@ function startAdapter(options) {
                 }
             }
 
-            let transition = 0;
+
             if ('transition' in ls) {
-                transition = Math.max(0, Math.min(65535, parseInt(ls.transition)));
+                ls.transition = Math.max(0, Math.min(65535, parseInt(ls.transition)));
                 if (!isNaN(transition)) {
                     //finalLS.transition = transition;
                     //lightState = lightState.transition(transition);
-                    adapter.setState(`${id}.${dp}`, transition, true);
+                    adapter.setState(`${id}.${dp}`, ls.transition, true);
                 } else {
                     adapter.log.warn(`transition is not a number!`);
+                    return;
                 }
             }
 
@@ -386,13 +387,13 @@ function startAdapter(options) {
                 if (!adapter.config.nativeTurnOffBehaviour || !alls['anyOn']) {
                     finalLS.transition = transition;
                     finalLS.on = true;
-                    lightState = lightState.transition(transition);
+                    lightState = lightState.transition(ls.transition);
                     lightState = lightState.on();
                 }
             } else {
                 lightState = lightState.off();
-                lightState = lightState.transition(transition);
-                finalLS.transition = transition;
+                lightState = lightState.transition(ls.transition);
+                finalLS.transition = ls.transition;
                 finalLS.bri = 0;
                 finalLS.on = false;
             }
@@ -420,8 +421,8 @@ function startAdapter(options) {
 
                 finalLS.xy = `${xy.x},${xy.y}`;
                 lightState = lightState.xy(parseFloat(xy.x), parseFloat(xy.y));
-                lightState = lightState.transition(transition);
-                finalLS.transition = transition;
+                lightState = lightState.transition(ls.transition);
+                finalLS.transition = ls.transition;
 
                 if (!lampOn && (!('bri' in ls) || ls.bri === 0) && adapter.config.turnOnWithOthers) {
                     lightState = lightState.on();
@@ -444,8 +445,8 @@ function startAdapter(options) {
                 // convert kelvin to mired
                 finalLS.ct = Math.round(1e6 / finalLS.ct);
                 lightState = lightState.ct(finalLS.ct);
-                lightState = lightState.transition(transition);
-                finalLS.transition = transition;
+                lightState = lightState.transition(ls.transition);
+                finalLS.transition = ls.transition;
 
                 if (!lampOn && (!('bri' in ls) || ls.bri === 0) && adapter.config.turnOnWithOthers) {
                     lightState = lightState.on();
@@ -473,8 +474,8 @@ function startAdapter(options) {
                 }
 
                 lightState = lightState.hue(finalLS.hue);
-                lightState = lightState.transition(transition);
-                finalLS.transition = transition;
+                lightState = lightState.transition(ls.transition);
+                finalLS.transition = ls.transition;
 
                 if (!lampOn && (!('bri' in ls) || ls.bri === 0) && adapter.config.turnOnWithOthers) {
                     lightState = lightState.on();
@@ -486,8 +487,8 @@ function startAdapter(options) {
             if ('sat' in ls) {
                 finalLS.sat = Math.max(0, Math.min(254, ls.sat)) || 0;
                 lightState = lightState.sat(finalLS.sat);
-                lightState = lightState.transition(transition);
-                finalLS.transition = transition;
+                lightState = lightState.transition(ls.transition);
+                finalLS.transition = ls.transition;
                 if (!lampOn && (!('bri' in ls) || ls.bri === 0) && adapter.config.turnOnWithOthers) {
                     lightState = lightState.on();
                     lightState = lightState.bri(254);
@@ -524,8 +525,8 @@ function startAdapter(options) {
                     finalLS.on = true;
                 }
                 lightState = lightState.sat(finalLS.sat);
-                lightState = lightState.transition(transition);
-                finalLS.transition = transition;
+                lightState = lightState.transition(ls.transition);
+                finalLS.transition = ls.transition;
             }
             if ('hue_inc' in ls && !('hue' in finalLS) && 'hue' in alls) {
                 alls.hue = alls.hue % 360;
@@ -549,8 +550,8 @@ function startAdapter(options) {
                     finalLS.on = true;
                 }
                 lightState = lightState.hue(finalLS.hue);
-                lightState = lightState.transition(transition);
-                finalLS.transition = transition;
+                lightState = lightState.transition(ls.transition);
+                finalLS.transition = ls.transition;
             }
             if ('ct_inc' in ls && !('ct' in finalLS) && 'ct' in alls) {
                 alls.ct = 500 - 153 - ((alls.ct - 2200) / (6500 - 2200)) * (500 - 153) + 153;
@@ -563,8 +564,8 @@ function startAdapter(options) {
                     finalLS.on = true;
                 }
                 lightState = lightState.ct(finalLS.ct);
-                lightState = lightState.transition(transition);
-                finalLS.transition = transition;
+                lightState = lightState.transition(ls.transition);
+                finalLS.transition = ls.transition;
             }
             if ('bri_inc' in ls) {
                 finalLS.bri = (((parseInt(alls.bri, 10) + parseInt(ls.bri_inc, 10)) % 255) + 255) % 255;
@@ -581,8 +582,8 @@ function startAdapter(options) {
                     lightState = lightState.on();
                 }
                 lightState = lightState.bri(finalLS.bri);
-                lightState = lightState.transition(transition);
-                finalLS.transition = transition;
+                lightState = lightState.transition(ls.transition);
+                finalLS.transition = ls.transition;
             }
 
             // change colormode

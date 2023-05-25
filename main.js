@@ -344,7 +344,7 @@ function startAdapter(options) {
                 }
             }
 
-            if (dp === transition) return;
+            if (dp === 'transition') return;
 
             // apply rgb to xy with modelId
             if ('r' in ls || 'g' in ls || 'b' in ls) {
